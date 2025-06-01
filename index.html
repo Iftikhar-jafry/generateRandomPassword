@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Random Password</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="generatePassword.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generate a <br> <span class="font-extrabold">Random Password</span></h1>
+
+        <div class="mb-4 flex justify-between items-center w-full px-2">
+            <label for="passwordLength" class="block text-gray-700 text-sm font-bold mb-0">Password Length:</label>
+            <input type="number" id="passwordLength" value="12" min="4" max="32"
+                   class="shadow appearance-none border border-gray-300 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-20 text-center">
+        </div>
+
+        <div class="display">
+            <input type="text" id="rando" readonly>
+            <img src="https://static.vecteezy.com/system/resources/previews/000/423/339/original/copy-icon-vector-illustration.jpg" alt="Copy Password" id="copy_pass">
+        </div>
+
+        <button onclick="randomPassword()">
+            Generate Password
+        </button>
+    </div>
+
+    <script>
+        // Function to generate a random password
+        function randomPassword() {
+            const length = document.getElementById('passwordLength').value;
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                password += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            document.getElementById("rando").value = password;
+        }
+
+        // Get the copy image element
+        const copyImg = document.getElementById('copy_pass');
+
+        // Add a click event listener to the copy image
+        copyImg.addEventListener('click', function() {
+            const passwordInput = document.getElementById('rando');
+            passwordInput.select();
+            passwordInput.setSelectionRange(0, 99999); // For mobile devices
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(passwordInput.value)
+                    .then(() => {
+                        alert("Password copied to clipboard!");
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        try {
+                            document.execCommand('copy');
+                            alert("Password copied to clipboard (fallback)!");
+                        } catch (err) {
+                            alert("Failed to copy password. Please copy it manually.");
+                        }
+                    });
+            } else {
+                try {
+                    document.execCommand('copy');
+                    alert("Password copied to clipboard (fallback)!");
+                } catch (err) {
+                    alert("Failed to copy password. Please copy it manually.");
+                }
+            }
+        });
+
+        // Call randomPassword() on page load to generate an initial password
+        document.addEventListener('DOMContentLoaded', randomPassword);
+    </script>
+</body>
+</html>
